@@ -71,19 +71,19 @@ app.put("/api/songs/:id", async (req, res) => {
     }
 });
 
-// // DELETE song
-// app.delete("/api/songs/:id", async (req, res) => {
-//     try {
-//         const deleted = await Song.findByIdAndDelete(req.params.id);
-//
-//         if (!deleted) {
-//             return res.status(404).json({ message: "Song not found" });
-//         }
-//
-//         res.status(204).end();
-//     } catch (err) {
-//         res.status(500).json({ message: err.message || "Delete failed" });
-//     }
-// });
+// DELETE song
+app.delete("/api/songs/:id", async (req, res) => {
+    try {
+        const deleted = await Song.findByIdAndDelete(req.params.id);
+
+        if (!deleted) {
+            return res.status(404).json({ message: "Song not found" });
+        }
+
+        res.status(204).end();
+    } catch (err) {
+        res.status(500).json({ message: err.message || "Delete failed" });
+    }
+});
 
 app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
