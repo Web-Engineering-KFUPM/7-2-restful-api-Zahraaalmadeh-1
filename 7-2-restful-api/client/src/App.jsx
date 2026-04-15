@@ -179,14 +179,16 @@ LAB SETUP INSTRUCTIONS
         res.status(___).end();
       });
  */
-
 import { useEffect, useMemo, useState } from "react";
 import SongForm from "./components/SongForm.jsx";
 import SongTable from "./components/SongTable.jsx";
 import EditDialog from "./components/EditDialog.jsx";
 import {
-  apiGetSongs, apiGetSong,
-  apiCreateSong, apiUpdateSong, apiDeleteSong
+  apiGetSongs,
+  apiGetSong,
+  apiCreateSong,
+  apiUpdateSong,
+  apiDeleteSong
 } from "./lib/api.js";
 import React from "react";
 
@@ -216,7 +218,9 @@ export default function App() {
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const onCreate = async (payload) => {
     setCreating(true);
@@ -267,50 +271,58 @@ export default function App() {
     }
   };
 
-  const editingOpen = useMemo(() => Boolean(editingId && editingSong), [editingId, editingSong]);
+  const editingOpen = useMemo(
+      () => Boolean(editingId && editingSong),
+      [editingId, editingSong]
+  );
 
   return (
-    <div className="container">
-      <div className="header">
-        <div className="brand">
-          <div className="logo" />
-          <div>
-            <div className="title">Songs Admin</div>
-            <div style={{ color: "var(--muted)", fontSize: 13 }}>
-              RESTful Web APIs with Fetch — React + Vite
+      <div className="container">
+        <div className="header">
+          <div className="brand">
+            <div className="logo" />
+            <div>
+              <div className="title">Songs Admin</div>
+              <div style={{ color: "var(--muted)", fontSize: 13 }}>
+                RESTful Web APIs with Fetch — React + Vite
+              </div>
             </div>
           </div>
-        </div>
-        <div className="badge">API: {import.meta.env.VITE_API_URL || "http://localhost:5174"}</div>
-      </div>
-
-      <div className="grid">
-        <div className="card">
-          <SongForm onCreate={onCreate} loading={creating} />
+          <div className="badge">
+            API: {import.meta.env.VITE_API_URL || "http://localhost:5174"}
+          </div>
         </div>
 
-        <div className="card">
-          {loading ? (
-            <div className="table-wrap" style={{ padding: 24, color: "#9fb1e8" }}>
-              Loading songs…
-            </div>
-          ) : (
-            <SongTable songs={songs} onEdit={onEdit} onDelete={onDelete} />
-          )}
+        <div className="grid">
+          <div className="card">
+            <SongForm onCreate={onCreate} loading={creating} />
+          </div>
+
+          <div className="card">
+            {loading ? (
+                <div className="table-wrap" style={{ padding: 24, color: "#9fb1e8" }}>
+                  Loading songs…
+                </div>
+            ) : (
+                <SongTable songs={songs} onEdit={onEdit} onDelete={onDelete} />
+            )}
+          </div>
+        </div>
+
+        <EditDialog
+            open={editingOpen}
+            song={editingSong}
+            onClose={() => {
+              setEditingId(null);
+              setEditingSong(null);
+            }}
+            onSave={onSave}
+            saving={saving}
+        />
+
+        <div className={`toast ${toast.msg ? "show" : ""} ${toast.type}`}>
+          {toast.msg}
         </div>
       </div>
-
-      <EditDialog
-        open={editingOpen}
-        song={editingSong}
-        onClose={() => { setEditingId(null); setEditingSong(null); }}
-        onSave={onSave}
-        saving={saving}
-      />
-
-      <div className={`toast ${toast.msg ? "show" : ""} ${toast.type}`}>
-        {toast.msg}
-      </div>
-    </div>
   );
 }

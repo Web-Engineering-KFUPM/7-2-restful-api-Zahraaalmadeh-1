@@ -14,7 +14,6 @@ app.use(express.json());
 
 await connectDB(process.env.MONGO_URL);
 
-// GET all songs
 app.get("/api/songs", async (req, res) => {
     try {
         const rows = await Song.find().sort({ createdAt: -1 });
@@ -24,7 +23,6 @@ app.get("/api/songs", async (req, res) => {
     }
 });
 
-// GET one song by id
 app.get("/api/songs/:id", async (req, res) => {
     try {
         const s = await Song.findById(req.params.id);
@@ -35,7 +33,6 @@ app.get("/api/songs/:id", async (req, res) => {
     }
 });
 
-// POST create song
 app.post("/api/songs", async (req, res) => {
     try {
         const { title = "", artist = "", year } = req.body || {};
@@ -52,7 +49,6 @@ app.post("/api/songs", async (req, res) => {
     }
 });
 
-// PUT update song
 app.put("/api/songs/:id", async (req, res) => {
     try {
         const updated = await Song.findByIdAndUpdate(
@@ -71,7 +67,6 @@ app.put("/api/songs/:id", async (req, res) => {
     }
 });
 
-// DELETE song
 app.delete("/api/songs/:id", async (req, res) => {
     try {
         const deleted = await Song.findByIdAndDelete(req.params.id);
